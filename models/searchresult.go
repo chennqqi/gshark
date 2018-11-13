@@ -2,9 +2,10 @@ package models
 
 import (
 	"fmt"
+	"time"
+
 	"github.com/google/go-github/github"
 	"github.com/neal1991/gshark/vars"
-	"time"
 )
 
 type Match struct {
@@ -38,7 +39,7 @@ type CodeResult struct {
 	CreatedTime time.Time          `xorm:"created"`
 	UpdatedTime time.Time          `xorm:"updated"`
 	RepoPath    *string
-	Keyword     *string
+	Keyword     *string `xorm:"VARCHAR(255) index(keyword)"`
 }
 
 type MatchedText struct {
