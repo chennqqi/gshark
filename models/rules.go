@@ -12,7 +12,7 @@ import (
 
 type Rule struct {
 	Id          int64
-	Part        string
+	Position    string
 	Type        string
 	Pattern     string
 	Caption     string
@@ -20,8 +20,9 @@ type Rule struct {
 	Status      int    `xorm:"int default 0 notnull"`
 }
 
-func NewRules(part, ruleType, pat, caption, desc string, status int) *Rule {
-	return &Rule{Part: part, Type: ruleType, Pattern: pat, Caption: caption, Description: desc, Status: status}
+func NewRule(ruleType, pat, caption, pos, desc string, status int) *Rule {
+	return &Rule{Type: ruleType, Pattern: pat, Caption: caption,
+		Position: pos, Description: desc, Status: status}
 }
 
 func (r *Rule) Insert() (err error) {
@@ -63,11 +64,11 @@ func GetRuleById(id int64) (*Rule, bool, error) {
 	return rule, has, err
 }
 
-func EditRuleById(id int64, part, ruleType, pat, caption, desc string, status int) error {
+func EditRuleById(id int64, position, ruleType, pat, caption, desc string, status int) error {
 	rule := new(Rule)
 	_, has, err := GetRuleById(id)
 	if err == nil && has {
-		rule.Part = part
+		rule.Position = position
 		rule.Type = ruleType
 		rule.Pattern = pat
 		rule.Caption = caption
@@ -154,6 +155,6 @@ func InsertRules(filename string) error {
 
 func GetGithubKeywords() ([]Rule, error) {
 	rules := make([]Rule, 0)
-	err := Engine.Table("rule").Where("part='github' and status=1").Find(&rules)
+	err := Engine.Table("rule").Where("status=1").Find(&rules)
 	return rules, err
 }

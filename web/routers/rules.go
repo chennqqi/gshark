@@ -1,10 +1,10 @@
 package routers
 
 import (
-	"gopkg.in/macaron.v1"
 	"github.com/neal1991/gshark/models"
 	"github.com/neal1991/gshark/util/common"
 	"github.com/neal1991/gshark/vars"
+	"gopkg.in/macaron.v1"
 
 	"github.com/go-macaron/csrf"
 	"github.com/go-macaron/session"
@@ -45,14 +45,14 @@ func NewRules(ctx *macaron.Context, sess session.Store) {
 func DoNewRules(ctx *macaron.Context, sess session.Store) {
 	ctx.Req.ParseForm()
 	if sess.Get("admin") != nil {
-		part := strings.TrimSpace(ctx.Req.Form.Get("part"))
 		Type := strings.TrimSpace(ctx.Req.Form.Get("type"))
 		content := strings.TrimSpace(ctx.Req.Form.Get("content"))
 		caption := strings.TrimSpace(ctx.Req.Form.Get("caption"))
+		pos := strings.TrimSpace(ctx.Req.Form.Get("position"))
 		desc := strings.TrimSpace(ctx.Req.Form.Get("desc"))
 		status := strings.TrimSpace(ctx.Req.Form.Get("status"))
 		intStatus, _ := strconv.Atoi(status)
-		rule := models.NewRules(part, Type, content, caption, desc, intStatus)
+		rule := models.NewRule(Type, content, caption, pos, desc, intStatus)
 		rule.Insert()
 		ctx.Redirect("/admin/rules/list/")
 	} else {
@@ -79,14 +79,14 @@ func DoEditRules(ctx *macaron.Context, sess session.Store) {
 	if sess.Get("admin") != nil {
 		id := ctx.Params(":id")
 		Id, _ := strconv.Atoi(id)
-		part := strings.TrimSpace(ctx.Req.Form.Get("part"))
+		position := strings.TrimSpace(ctx.Req.Form.Get("position"))
 		Type := strings.TrimSpace(ctx.Req.Form.Get("type"))
 		content := strings.TrimSpace(ctx.Req.Form.Get("content"))
 		caption := strings.TrimSpace(ctx.Req.Form.Get("caption"))
 		desc := strings.TrimSpace(ctx.Req.Form.Get("desc"))
 		status := strings.TrimSpace(ctx.Req.Form.Get("status"))
 		intStatus, _ := strconv.Atoi(status)
-		models.EditRuleById(int64(Id), part, Type, content, caption, desc, intStatus)
+		models.EditRuleById(int64(Id), position, Type, content, caption, desc, intStatus)
 		ctx.Redirect("/admin/rules/list/")
 	} else {
 		ctx.Redirect("/admin/login/")
