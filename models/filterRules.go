@@ -1,7 +1,7 @@
 package models
 
 import (
-	"strings"
+	"regexp"
 
 	"github.com/neal1991/gshark/vars"
 )
@@ -15,19 +15,17 @@ type FilterRule struct {
 
 type ExcludeFilter struct {
 	FilterRule
-	nameMap map[string]bool
+	exp *regexp.Regexp
 }
 
-func (r *ExcludeFilter) compile() {
-	r.nameMap = make(map[string]bool)
-	names := strings.Split(r.RuleValue)
-	for i := 0; i < len(names); i++ {
-		r.nameMap[names[i]] = true
-	}
+func (r *ExcludeFilter) compile() error {
+	var err error
+	r.exp, err = regexp.Compile(r.RuleValue)
+	return err
 }
 
 func (r *ExcludeFilter) Exclude(name string) bool {
-	return r.nameMap[name]
+	return r.exp.MatchString(name)
 }
 
 func NewFilterRule(ruleType int, ruleKey, ruleValue string) *FilterRule {
@@ -44,7 +42,10 @@ func GetFilterRules() ([]ExcludeFilter, error) {
 	err := Engine.Table("filter_rule").Where(`rule_key!=?`, "name").Find(&rules)
 	for i := 0; i < len(rules); i++ {
 		rule = &rules[i]
-		rule.compile()
+		err = rule.compile()
+		if err != nil {
+			return nil, err
+		}
 	}
 	return rules, err
 }
