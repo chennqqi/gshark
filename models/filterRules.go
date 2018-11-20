@@ -22,7 +22,13 @@ func (r *FilterRule) Insert() (err error) {
 
 func GetFilterRules() ([]FilterRule, error) {
 	rules := make([]FilterRule, 0)
-	err := Engine.Table("filter_rule").Find(&rules)
+	err := Engine.Table("filter_rule").Where(`rule_key!=?`, "name").Find(&rules)
+	return rules, err
+}
+
+func GetExcludeNames() ([]FilterRule, error) {
+	rules := make([]FilterRule, 0)
+	err := Engine.Table("filter_rule").Where(`rule_key!=`, "name").And("rule_type=", 0).Find(&rules)
 	return rules, err
 }
 
