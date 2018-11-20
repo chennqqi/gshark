@@ -9,9 +9,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/google/go-github/github"
 	"github.com/chennqqi/gshark/logger"
 	"github.com/chennqqi/gshark/models"
+	"github.com/google/go-github/github"
 )
 
 var (
@@ -74,7 +74,7 @@ func PassFilters(codeResult *models.CodeResult) bool {
 func SaveResult(results []*github.CodeSearchResult, err error, keyword *string) {
 	insertCount := 0
 
-	excludeFilers, _ := models.GetExcludeNames()
+	excludeFilers, _ := models.GetExcludeNameRules()
 
 	for _, result := range results {
 		if err == nil && result != nil && len(result.CodeResults) > 0 {

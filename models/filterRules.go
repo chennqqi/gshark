@@ -37,8 +37,8 @@ func (r *FilterRule) Insert() (err error) {
 	return err
 }
 
-func GetFilterRules() ([]ExcludeFilter, error) {
-	var rules []ExcludeFilter
+func GetFilterRules() ([]FilterRule, error) {
+	var rules []FilterRule
 	err := Engine.Table("filter_rule").Where(`rule_key!=?`, "name").Find(&rules)
 	for i := 0; i < len(rules); i++ {
 		rule = &rules[i]
@@ -50,7 +50,7 @@ func GetFilterRules() ([]ExcludeFilter, error) {
 	return rules, err
 }
 
-func GetExcludeNames() ([]FilterRule, error) {
+func GetExcludeNameRules() ([]ExcludeFilter, error) {
 	rules := make([]FilterRule, 0)
 	err := Engine.Table("filter_rule").Where(`rule_key=?`, "name").Find(&rules)
 	return rules, err
