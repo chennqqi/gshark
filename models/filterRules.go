@@ -1,6 +1,8 @@
 package models
 
 import (
+	"strings"
+
 	"github.com/neal1991/gshark/vars"
 )
 
@@ -9,6 +11,23 @@ type FilterRule struct {
 	RuleType  int // 0: blacklist rule, 1: whitelist rule
 	RuleKey   string
 	RuleValue string `xorm:"text"`
+}
+
+type ExcludeFilter struct {
+	FilterRule
+	nameMap map[string]bool
+}
+
+func (r *ExcludeFilter) compile() {
+	r.nameMap = make(map[string]bool)
+	names := strings.Split(r.RuleValue)
+	for i := 0; i < len(names); i++ {
+		r.nameMap[names[i]] = true
+	}
+}
+
+func (r *ExcludeFilter) Exclude(name string) bool {
+	return r.nameMap[name]
 }
 
 func NewFilterRule(ruleType int, ruleKey, ruleValue string) *FilterRule {
@@ -20,15 +39,19 @@ func (r *FilterRule) Insert() (err error) {
 	return err
 }
 
-func GetFilterRules() ([]FilterRule, error) {
-	rules := make([]FilterRule, 0)
+func GetFilterRules() ([]ExcludeFilter, error) {
+	var rules []ExcludeFilter
 	err := Engine.Table("filter_rule").Where(`rule_key!=?`, "name").Find(&rules)
+	for i := 0; i < len(rules); i++ {
+		rule = &rules[i]
+		rule.compile()
+	}
 	return rules, err
 }
 
 func GetExcludeNames() ([]FilterRule, error) {
 	rules := make([]FilterRule, 0)
-	err := Engine.Table("filter_rule").Where(`rule_key!=`, "name").And("rule_type=", 0).Find(&rules)
+	err := Engine.Table("filter_rule").Where(`rule_key=?`, "name").Find(&rules)
 	return rules, err
 }
 

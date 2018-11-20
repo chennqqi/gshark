@@ -4,13 +4,14 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/google/go-github/github"
-	"github.com/neal1991/gshark/logger"
-	"github.com/neal1991/gshark/models"
 	"regexp"
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/google/go-github/github"
+	"github.com/neal1991/gshark/logger"
+	"github.com/neal1991/gshark/models"
 )
 
 var (
@@ -37,6 +38,7 @@ func Search(rules []models.Rule) {
 	var wg sync.WaitGroup
 	wg.Add(len(rules))
 	client, token, err := GetGithubClient()
+
 	if err == nil && token != "" {
 		for _, rule := range rules {
 			go func(rule models.Rule) {
@@ -71,6 +73,9 @@ func PassFilters(codeResult *models.CodeResult) bool {
 
 func SaveResult(results []*github.CodeSearchResult, err error, keyword *string) {
 	insertCount := 0
+
+	excludeFilers, _ := models.GetExcludeNames()
+
 	for _, result := range results {
 		if err == nil && result != nil && len(result.CodeResults) > 0 {
 			for _, resultItem := range result.CodeResults {
@@ -82,6 +87,13 @@ func SaveResult(results []*github.CodeSearchResult, err error, keyword *string) 
 					fullName := codeResult.Repository.GetFullName()
 					repoUrl := codeResult.Repository.GetHTMLURL()
 					codeResult.RepoName = fullName
+
+					for i := 0; i < len(excludeFilers); i++ {
+						filter := excludeFilers[i]
+						if filter.Exclude(fullName) {
+							continue
+						}
+					}
 
 					inputInfo := models.NewInputInfo(CONST_REPO, repoUrl, fullName)
 					has, err := inputInfo.Exist(repoUrl)
