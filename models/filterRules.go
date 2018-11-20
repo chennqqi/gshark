@@ -41,7 +41,7 @@ func GetFilterRules() ([]ExcludeFilter, error) {
 	var rules []ExcludeFilter
 	err := Engine.Table("filter_rule").Where(`rule_key!=?`, "name").Find(&rules)
 	for i := 0; i < len(rules); i++ {
-		rule = &rules[i]
+		rule := &rules[i]
 		err = rule.compile()
 		if err != nil {
 			return nil, err
