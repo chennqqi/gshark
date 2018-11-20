@@ -1,8 +1,8 @@
 package settings
 
 import (
-	"github.com/neal1991/gshark/logger"
-	"github.com/neal1991/gshark/vars"
+	"github.com/chennqqi/gshark/logger"
+	"github.com/chennqqi/gshark/vars"
 
 	"gopkg.in/ini.v1"
 	"os"

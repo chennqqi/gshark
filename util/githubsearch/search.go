@@ -10,8 +10,8 @@ import (
 	"time"
 
 	"github.com/google/go-github/github"
-	"github.com/neal1991/gshark/logger"
-	"github.com/neal1991/gshark/models"
+	"github.com/chennqqi/gshark/logger"
+	"github.com/chennqqi/gshark/models"
 )
 
 var (

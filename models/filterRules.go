@@ -3,7 +3,7 @@ package models
 import (
 	"regexp"
 
-	"github.com/neal1991/gshark/vars"
+	"github.com/chennqqi/gshark/vars"
 )
 
 type FilterRule struct {

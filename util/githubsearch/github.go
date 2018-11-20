@@ -3,9 +3,9 @@ package githubsearch
 import (
 	"fmt"
 	"github.com/google/go-github/github"
-	"github.com/neal1991/gshark/logger"
-	"github.com/neal1991/gshark/models"
-	"github.com/neal1991/gshark/util/common"
+	"github.com/chennqqi/gshark/logger"
+	"github.com/chennqqi/gshark/models"
+	"github.com/chennqqi/gshark/util/common"
 	"strconv"
 	"strings"
 )

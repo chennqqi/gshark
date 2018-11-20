@@ -1,7 +1,7 @@
 package models
 
 import (
-	"github.com/neal1991/gshark/misc"
+	"github.com/chennqqi/gshark/misc"
 )
 
 type Admin struct {

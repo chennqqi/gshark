@@ -1,7 +1,7 @@
 package routers
 
 import (
-	"github.com/neal1991/gshark/models"
+	"github.com/chennqqi/gshark/models"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )

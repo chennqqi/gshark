@@ -1,7 +1,7 @@
 package models_test
 
 import (
-	"github.com/neal1991/gshark/models"
+	"github.com/chennqqi/gshark/models"
 
 	"fmt"
 	"github.com/stretchr/testify/assert"

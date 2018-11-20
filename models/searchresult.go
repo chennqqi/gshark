@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/google/go-github/github"
-	"github.com/neal1991/gshark/vars"
+	"github.com/chennqqi/gshark/vars"
 )
 
 type Match struct {

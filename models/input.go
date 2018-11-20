@@ -1,7 +1,7 @@
 package models
 
 import (
-	"github.com/neal1991/gshark/vars"
+	"github.com/chennqqi/gshark/vars"
 
 	"time"
 )

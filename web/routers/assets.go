@@ -3,9 +3,9 @@ package routers
 import (
 	"github.com/go-macaron/csrf"
 	"github.com/go-macaron/session"
-	"github.com/neal1991/gshark/models"
-	"github.com/neal1991/gshark/util/common"
-	"github.com/neal1991/gshark/vars"
+	"github.com/chennqqi/gshark/models"
+	"github.com/chennqqi/gshark/util/common"
+	"github.com/chennqqi/gshark/vars"
 	"gopkg.in/macaron.v1"
 	"strconv"
 	"strings"
