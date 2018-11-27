@@ -18,6 +18,16 @@ type ExcludeFilter struct {
 	exp *regexp.Regexp
 }
 
+func (rules []FilterRule) Exclude(name string) bool {
+	for i := 0; i < len(rules); i++ {
+		r := rules[i]
+		if r.Exclude(name) {
+			return true
+		}
+	}
+	return false
+}
+
 func (r *ExcludeFilter) compile() error {
 	var err error
 	r.exp, err = regexp.Compile(r.RuleValue)

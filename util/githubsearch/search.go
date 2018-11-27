@@ -89,11 +89,9 @@ func SaveResult(results []*github.CodeSearchResult, err error, keyword *string) 
 					codeResult.RepoName = fullName
 
 					if codeResult.Repository.Name != nil {
-						for i := 0; i < len(excludeFilers); i++ {
-							filter := excludeFilers[i]
-							if filter.Exclude(*codeResult.Repository.Name) {
-								continue
-							}
+						if excludeFilers.Exclude(*codeResult.Repository.Name) {
+							logger.Log.Infof("[saveresult] exclude by name[%v]", *codeResult.Repository.Name)
+							continue
 						}
 					}
 					inputInfo := models.NewInputInfo(CONST_REPO, repoUrl, fullName)
