@@ -44,19 +44,21 @@ func GetFilterRules() ([]FilterRule, error) {
 }
 
 func GetExcludeNameRules() ([]ExcludeFilter, error) {
-	rules := make([]ExcludeFilter, 0)
+	rules := make([]FilterRule, 0)
 	err := Engine.Table("filter_rule").Where(`rule_key=?`, "name").Find(&rules)
-	if err!=nil{
-		return rules, err
+	if err != nil {
+		return nil, err
 	}
+	outrules := make([]ExcludeFilter, len(rules))
 	for i := 0; i < len(rules); i++ {
-		rule := &rules[i]
-		err = rule.compile()
+		out := &outrules[i]
+		out.FilterRule = rules[i]
+		err = out.compile()
 		if err != nil {
 			return nil, err
 		}
 	}
-	return rules, err
+	return outrules, err
 }
 
 func GetFilterRulesPage(page int) ([]FilterRule, int, error) {
