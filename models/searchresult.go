@@ -40,6 +40,7 @@ type CodeResult struct {
 	UpdatedTime time.Time          `xorm:"updated"`
 	RepoPath    *string
 	Keyword     *string `xorm:"VARCHAR(255) index(keyword)"`
+	Score       float32
 }
 
 type MatchedText struct {
@@ -69,7 +70,7 @@ type CodeResultDetail struct {
 	RepoUpdatedAt *github.Timestamp
 
 	Status       int
-	MatchedTexts []*string
+	MatchedTexts []TextMatch
 }
 
 // CodeSearchResult represents the result of a code search.
@@ -157,17 +158,22 @@ func getCodeResultDetail(codeResult *CodeResult) CodeResultDetail {
 	detail.RepoUpdatedAt = repo.UpdatedAt
 	detail.Status = codeResult.Status
 	detail.Keyword = codeResult.Keyword
-	detail.MatchedTexts = getMatchedTests(codeResult)
+	detail.MatchedTexts = GetMatchedTexts(*detail.RepoName)
+	//detail.MatchedTexts = getMatchedTests(codeResult)
 	return detail
 }
 
-func getMatchedTests(result *CodeResult) []*string {
-	textMatches := result.TextMatches
-	matchedTexts := make([]*string, 0)
-	for _, textMatch := range textMatches {
-		matchedTexts = append(matchedTexts, textMatch.Fragment)
+func GetMatchedTexts(repoName string) []TextMatch {
+	textMatches := make([]TextMatch, 0)
+	var codeResults []CodeResult
+	err := Engine.Table("code_result").Where("repo_name=?", repoName).Find(&codeResults)
+	for _, codeResult := range codeResults {
+		textMatches = append(textMatches, codeResult.TextMatches[0])
 	}
-	return matchedTexts
+	if err != nil {
+		fmt.Println(err)
+	}
+	return textMatches
 }
 
 func GetReportById(id int64, omitRepo bool) (bool, *CodeResult, error) {
