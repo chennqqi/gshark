@@ -88,9 +88,9 @@ func SaveResult(results []*github.CodeSearchResult, err error, keyword *string) 
 					repoUrl := codeResult.Repository.GetHTMLURL()
 					codeResult.RepoName = fullName
 
-					if codeResult.Repository.Name != nil {
-						if excludeFilers.Exclude(*codeResult.Repository.Name) {
-							logger.Log.Infof("[saveresult] exclude by name[%v]", *codeResult.Repository.Name)
+					if codeResult.Name != nil {
+						if excludeFilers.Exclude(*codeResult.Name) {
+							logger.Log.Infof("[saveresult] exclude by name[%v]", *codeResult.Name)
 							continue
 						}
 					}
