@@ -1,0 +1,31 @@
+FROM alpine
+MAINTAINER <q@shellpub.com>
+
+LABEL maintainer "https://github.com/chennqqi"
+LABEL malice.plugin.repository = "https://github.com/chennqqi/gshark.git"
+
+ARG app_name=gshark
+ARG user=sre
+
+#alpine: adduser -d "/home/$user" -G ${user} ${user} \
+#ubuntu: adduser -d "/home/$user" -g ${user} -m ${user} \
+
+RUN set -x \
+  && echo "===> Add malice user and malware folder..." \
+  && adduser -D -h "/home/$user" ${user} \
+  && mkdir /app \
+  && echo "===> Building ${app_name}  daemon..."
+
+## fix golang link for alpine
+#RUN mkdir /lib64 && ln -s /lib/libc.musl-x86_64.so.1 /lib64/ld-linux-x86-64.so.2
+
+# copy version
+COPY ${app_name} /app/
+COPY templates /app/
+COPY conf /app
+RUN chmod +x /app/${app_name}  && chown -R ${user}:${user} /app
+USER ${user}
+WORKDIR /app
+
+ENTRYPOINT ["./${app_name}"]
+CMD ["--help"]

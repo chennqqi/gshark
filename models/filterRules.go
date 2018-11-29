@@ -18,7 +18,9 @@ type ExcludeFilter struct {
 	exp *regexp.Regexp
 }
 
-func (rules []FilterRule) Exclude(name string) bool {
+type ExcludeRules []ExcludeFilter
+
+func (rules ExcludeRules) Exclude(name string) bool {
 	for i := 0; i < len(rules); i++ {
 		r := rules[i]
 		if r.Exclude(name) {
@@ -53,13 +55,13 @@ func GetFilterRules() ([]FilterRule, error) {
 	return rules, err
 }
 
-func GetExcludeNameRules() ([]ExcludeFilter, error) {
+func GetExcludeNameRules() (ExcludeRules, error) {
 	rules := make([]FilterRule, 0)
 	err := Engine.Table("filter_rule").Where(`rule_key=?`, "name").Find(&rules)
 	if err != nil {
 		return nil, err
 	}
-	outrules := make([]ExcludeFilter, len(rules))
+	outrules := make(ExcludeRules, len(rules))
 	for i := 0; i < len(rules); i++ {
 		out := &outrules[i]
 		out.FilterRule = rules[i]
